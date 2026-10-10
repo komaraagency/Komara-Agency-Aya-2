@@ -1,16 +1,23 @@
-# Services Komara Agency
+# Nos Services — Komara Agency 🇬🇳
 
-## Bots WhatsApp et Telegram
-Bots qui vendent même quand tu dors : réponses automatiques 24/7, qualification de leads, prise de commandes, relance clients.
+## Bots Telegram et WhatsApp
+Nous créons des bots qui vendent pour vous même quand vous dormez :
+- Réponses automatiques 24/7 à vos clients
+- Qualification de leads et prise de commandes
+- Relances clients et notifications
 
-## Sites web
-Sites vitrine et boutiques en ligne modernes, animés au scroll, optimisés mobile.
+## Bots Messenger et Instagram
+Votre page Facebook et votre compte Instagram répondent tout seuls :
+- Réponses automatiques aux messages privés
+- Gestion des commentaires et mises en relation
+- Boutiques en ligne et catalogues
 
-## Logos et identité visuelle
-Création de logos, modernisation de logos existants, charte graphique complète.
+## Automatisation
+Nous automatisons vos tâches répétitives :
+- Prise de rendez-vous automatique
+- Relances et rappels clients
+- Notifications et tableaux de bord
 
-## Affiches et visuels publicitaires
-Affiches, visuels réseaux sociaux, retouche photo professionnelle, prises de RDV automatiques.
-
-## Comment commander
-Simple : 1. Dis-moi ton projet. 2. Je te fais un devis. 3. 50% pour démarrer, 50% à la livraison. 4. Tu reçois tes fichiers HD + sources.
+## Consultation et devis
+Séances de conseil personnalisées pour analyser vos besoins et choisir la bonne solution.
+Devis gratuit sous 24h ouvrées.

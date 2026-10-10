@@ -1,39 +1,40 @@
 """
-Détection de langue robuste : script arabe d'abord, puis langdetect,
-avec mémoire de la dernière langue du chat (anti-oscillation).
+Détection de langue améliorée avec gestion des caractères arabes.
 """
 import re
-from config import DEFAULT_LANGUAGE
-from utils import LAST_LANG_CACHE, clean_text, detect_language_simple
-
-_ARABIC_RE = re.compile(r"[\u0600-\u06FF]")
+from utils import detect_language_simple, LAST_LANG_CACHE
 
 
-def detect(text: str, chat_id: int | None = None) -> str:
-    """Détecte la langue du message. Ordre :
-    1. Script arabe prédominant -> "ar"
-    2. Message trop court / langdetect échoue -> dernière langue du chat
-    3. Sinon langdetect (mappé sur fr/ar/en)
-    La langue est mémorisée par chat pour les messages ambigus (« ok », « 1 »).
+def detect_language(text: str, chat_id: int = None) -> str:
     """
-    text = clean_text(text)
-    if not text:
-        return DEFAULT_LANGUAGE
+    Détecte la langue d'un message.
+    Utilise le cache pour éviter de re-détecter à chaque message.
+    """
+    # Vérifier le cache
+    if chat_id and chat_id in LAST_LANG_CACHE:
+        return LAST_LANG_CACHE[chat_id]
 
-    # 1. Script arabe prédominant
-    arabic_chars = len(_ARABIC_RE.findall(text))
-    if arabic_chars and arabic_chars >= len(text) / 4:
-        lang = "ar"
-        if chat_id is not None:
-            LAST_LANG_CACHE[chat_id] = lang
-        return lang
-
-    # 2. Message très court : garder la langue du contexte
-    if len(text) <= 3 and chat_id is not None:
-        return LAST_LANG_CACHE.get(chat_id, DEFAULT_LANGUAGE)
-
-    # 3. Détection langdetect
+    # Détection simple
     lang = detect_language_simple(text)
-    if chat_id is not None:
+
+    # Détection spécifique pour l'arabe (caractères Unicode)
+    arabic_pattern = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]')
+    if arabic_pattern.search(text):
+        lang = "ar"
+
+    # Mettre en cache
+    if chat_id:
         LAST_LANG_CACHE[chat_id] = lang
+
     return lang
+
+
+def change_language(chat_id: int, new_lang: str):
+    """Change la langue préférée d'un chat."""
+    LAST_LANG_CACHE[chat_id] = new_lang
+
+
+def get_language(chat_id: int) -> str:
+    """Récupère la langue actuelle d'un chat."""
+    from config import DEFAULT_LANGUAGE
+    return LAST_LANG_CACHE.get(chat_id, DEFAULT_LANGUAGE)

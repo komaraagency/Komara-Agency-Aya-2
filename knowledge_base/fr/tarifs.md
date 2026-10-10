@@ -1,19 +1,26 @@
-# Tarifs Komara Agency
+# Tarifs et Prix — Komara Agency 🇬🇳
 
-## Logo
-Logo seul : 50 € (ou équivalent GNF), livré en 24h. Fichiers HD + sources inclus.
+## Bot Telegram
+Notre bot Telegram commence à 150 € pour un bot scripté simple (FAQ, réponses automatiques, menu).
+Le prix varie selon les fonctionnalités : commandes, paiement, qualification de leads.
+Chatbot IA vendeur complet : à partir de 400 €.
 
-## Affiche et visuel publicitaire
-Affiche ou visuel pub : 300 000 GNF.
+## Bot WhatsApp
+Le bot WhatsApp commence à 200 € : réponses automatiques 24/7, prise de commandes, relance clients.
+Intégration catalogue et paiement : à partir de 350 €.
 
-## Site vitrine
-Site vitrine : 500 000 GNF, livré en 7 jours.
+## Bot Messenger
+Bot Messenger (page Facebook) : à partir de 150 €.
+Réponses automatiques, commentaire, mise en relation avec un opérateur humain.
 
-## Boutique en ligne
-Boutique e-commerce (catalogue, panier, commandes) : à partir de 200 $.
+## Bot Instagram
+Bot Instagram (DM automatiques, réponses aux commentaires) : à partir de 150 €.
+Idéal pour les boutiques qui reçoivent beaucoup de messages.
 
-## Bots et automatisation
-Bot WhatsApp/Telegram : sur devis selon les fonctionnalités (réponses auto, qualification de leads, prise de commandes).
+## Automatisation
+Automatisation de processus (prises de RDV, relances factures, notifications) : à partir de 100 € par automatisation.
+Configuration complète multi-plateformes : sur devis.
 
-## Paiement
-On prend 50% au démarrage et 50% à la livraison. Orange Money, MTN, paiement mobile, virement.
+## Délais de réponse
+Nous répondons à toutes les demandes de devis sous 24h ouvrées.
+Paiement : 50% au démarrage, 50% à la livraison.
