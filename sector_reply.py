@@ -6,24 +6,29 @@ import rag_engine
 
 SECTOR_KEYWORDS = {
     "tarifs": {
-        "fr": ["prix", "tarif", "coût", "cout", "combien", "budget", "devis"],
-        "ar": ["سعر", "تكلفة", "ميزانية", "عرض سعر", "كم"],
-        "en": ["price", "cost", "rate", "budget", "quote", "how much"],
+        "fr": ["prix", "tarif", "coût", "cout", "combien", "budget", "devis", "euro", "€"],
+        "ar": ["سعر", "تكلفة", "ميزانية", "عرض سعر", "كم", "يورو"],
+        "en": ["price", "cost", "rate", "budget", "quote", "how much", "euro", "€"],
     },
     "services": {
-        "fr": ["service", "prestation", "travail", "réalisation", "projet"],
-        "ar": ["خدمة", "عمل", "مشروع", "تنفيذ"],
-        "en": ["service", "work", "project", "delivery"],
+        "fr": ["service", "prestation", "travail", "réalisation", "projet", "bot", "chatbot", "telegram", "whatsapp"],
+        "ar": ["خدمة", "عمل", "مشروع", "تنفيذ", "بوت", "شات"],
+        "en": ["service", "work", "project", "delivery", "bot", "chatbot", "telegram", "whatsapp"],
     },
     "delais": {
-        "fr": ["délai", "temps", "durée", "quand", "combien de temps"],
-        "ar": ["موعد", "وقت", "مدة", "متى"],
-        "en": ["deadline", "time", "duration", "when", "how long"],
+        "fr": ["délai", "temps", "durée", "quand", "combien de temps", "rapidement", "urgent"],
+        "ar": ["موعد", "وقت", "مدة", "متى", "سريع", "عاجل"],
+        "en": ["deadline", "time", "duration", "when", "how long", "quickly", "urgent"],
     },
     "contact": {
-        "fr": ["contact", "téléphone", "email", "adresse", "joindre", "rdv", "rendez-vous"],
-        "ar": ["اتصال", "هاتف", "بريد", "عنوان", "موعد"],
-        "en": ["contact", "phone", "email", "address", "appointment"],
+        "fr": ["contact", "téléphone", "email", "adresse", "joindre", "rdv", "rendez-vous", "appeler"],
+        "ar": ["اتصال", "هاتف", "بريد", "عنوان", "موعد", "اتصل"],
+        "en": ["contact", "phone", "email", "address", "appointment", "call"],
+    },
+    "automatisation": {
+        "fr": ["automatisation", "automatique", "workflow", "intégration", "api", "flux"],
+        "ar": ["أتمتة", "تلقائي", "تكامل", "api"],
+        "en": ["automation", "automatic", "workflow", "integration", "api", "flow"],
     },
 }
 
