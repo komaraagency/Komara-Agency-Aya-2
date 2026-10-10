@@ -49,12 +49,12 @@ def get_sector_response(text: str, lang: str) -> str | None:
         # Pas de secteur détecté, recherche RAG classique
         return rag_engine.get_best_answer(text, lang)
 
-    # Recherche RAG avec le secteur en contexte : on enrichit la
-    # requête avec le mot-clé du secteur pour orienter les embeddings
-    # vers les bonnes fiches (ex: "logo" + "tarifs" -> fiche tarifs logo).
-    enhanced = f"{text} {sector}"
-    answer = rag_engine.get_best_answer(enhanced, lang)
+    # Recherche RAG avec le secteur en contexte
+    enhanced_query = f"{sector} {text}"
+    answer = rag_engine.get_best_answer(enhanced_query, lang)
+
     if answer is None:
-        # Repli : recherche RAG classique sur le texte brut
+        # Fallback : recherche sans le secteur
         answer = rag_engine.get_best_answer(text, lang)
+
     return answer
