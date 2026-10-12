@@ -2,16 +2,28 @@
 Logging vers Google Sheets.
 Tous les appels sont ASYNCHRONES pour ne pas bloquer le bot.
 """
+import json
 import threading
 import time
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from config import GOOGLE_SHEETS_ID, GOOGLE_CREDENTIALS_PATH
+from config import GOOGLE_SHEETS_ID, GOOGLE_CREDENTIALS_JSON, GOOGLE_CREDENTIALS_PATH
 
 # === Client Google Sheets ===
 _gc = None
 _sheet = None
 _lock = threading.Lock()
+
+
+def _load_credentials(scope):
+    """Charge les identifiants : variable d'env en priorité (jamais
+    dans le repo), sinon fichier credentials.json local."""
+    if GOOGLE_CREDENTIALS_JSON.strip():
+        data = json.loads(GOOGLE_CREDENTIALS_JSON)
+        return ServiceAccountCredentials.from_json_keyfile_dict(data, scope)
+    return ServiceAccountCredentials.from_json_keyfile_name(
+        GOOGLE_CREDENTIALS_PATH, scope
+    )
 
 
 def _get_sheet():
@@ -24,9 +36,7 @@ def _get_sheet():
                     "https://spreadsheets.google.com/feeds",
                     "https://www.googleapis.com/auth/drive",
                 ]
-                creds = ServiceAccountCredentials.from_json_keyfile_name(
-                    GOOGLE_CREDENTIALS_PATH, scope
-                )
+                creds = _load_credentials(scope)
                 _gc = gspread.authorize(creds)
                 _sheet = _gc.open_by_key(GOOGLE_SHEETS_ID).sheet1
     return _sheet

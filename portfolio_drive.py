@@ -2,13 +2,14 @@
 Gestion du portfolio via Google Drive.
 Télécharge les images et les envoie via Telegram.
 """
+import json
 import os
 import io
 import threading
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from oauth2client.service_account import ServiceAccountCredentials
-from config import GOOGLE_DRIVE_FOLDER_ID, GOOGLE_CREDENTIALS_PATH
+from config import GOOGLE_DRIVE_FOLDER_ID, GOOGLE_CREDENTIALS_JSON, GOOGLE_CREDENTIALS_PATH
 
 _drive_service = None
 _lock = threading.Lock()
@@ -21,9 +22,14 @@ def _get_drive_service():
         with _lock:
             if _drive_service is None:
                 scope = ["https://www.googleapis.com/auth/drive.readonly"]
-                creds = ServiceAccountCredentials.from_json_keyfile_name(
-                    GOOGLE_CREDENTIALS_PATH, scope
-                )
+                if GOOGLE_CREDENTIALS_JSON.strip():
+                    data = json.loads(GOOGLE_CREDENTIALS_JSON)
+                    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                        data, scope)
+                else:
+                    creds = ServiceAccountCredentials.from_json_keyfile_name(
+                        GOOGLE_CREDENTIALS_PATH, scope
+                    )
                 _drive_service = build("drive", "v3", credentials=creds)
     return _drive_service
 

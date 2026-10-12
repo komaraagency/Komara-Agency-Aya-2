@@ -16,6 +16,10 @@ GOOGLE_SHEETS_ID = os.getenv("GOOGLE_SHEETS_ID", "")
 GOOGLE_DRIVE_FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID", "")
 GOOGLE_CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH", "./credentials.json")
 
+# Compte de service en variable d'env (recommandé sur Railway : jamais
+# de fichier credentials.json dans le repo). Contenu JSON complet.
+GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON", "")
+
 # === Langue ===
 DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "fr")
 SUPPORTED_LANGUAGES = ["fr", "ar", "en"]
