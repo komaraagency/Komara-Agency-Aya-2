@@ -13,7 +13,6 @@ from telegram.ext import (
     Application, CommandHandler, MessageHandler, CallbackQueryHandler,
     filters, ContextTypes
 )
-from telegram.error import ApiTelegramException
 
 from config import TELEGRAM_BOT_TOKEN, DEFAULT_LANGUAGE, ADMIN_CHAT_ID
 from utils import clean_text, is_single_digit, GENERIC_MESSAGES, GREETED_SESSIONS
