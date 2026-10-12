@@ -3,9 +3,12 @@ Logging vers Google Sheets.
 Tous les appels sont ASYNCHRONES pour ne pas bloquer le bot.
 """
 import json
+import logging
 import threading
 import time
 import gspread
+
+logger = logging.getLogger("komara.sheets")
 from oauth2client.service_account import ServiceAccountCredentials
 from config import GOOGLE_SHEETS_ID, GOOGLE_CREDENTIALS_JSON, GOOGLE_CREDENTIALS_PATH
 
@@ -49,7 +52,8 @@ def _write_to_sheet(chat_id: str, user_name: str, role: str, message: str, lang:
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         sheet.append_row([timestamp, str(chat_id), user_name, role, message, lang])
     except Exception as e:
-        print(f"[Sheets] Erreur logging: {e}")
+        # Boss 12/10 : erreur VISIBLE dans les logs Railway (fini le print muet)
+        logger.error("[Sheets] Écriture impossible : %s", e)
 
 
 def log_conversation(chat_id: str, user_name: str, role: str, message: str, lang: str = "fr"):
@@ -73,5 +77,14 @@ def get_last_messages(chat_id: str, n: int = 5) -> list[dict]:
         chat_records = [r for r in all_records if str(r.get("chat_id", "")) == str(chat_id)]
         return chat_records[-n:]
     except Exception as e:
-        print(f"[Sheets] Erreur lecture: {e}")
+        logger.error("[Sheets] Lecture impossible : %s", e)
         return []
+
+
+def diagnose() -> str:
+    """Boss 12/10 : état de la connexion Sheets en une ligne."""
+    try:
+        sheet = _get_sheet()
+        return f"Sheets OK (onglet '{sheet.title}', {len(sheet.row_values(1))} colonnes)"
+    except Exception as e:
+        return f"Sheets ERREUR : {e}"

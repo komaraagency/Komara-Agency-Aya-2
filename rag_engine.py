@@ -31,6 +31,26 @@ _kb_cache = {}  # {lang: [{"text": ..., "embedding": [...], "source": ...}]}
 _kb_lock = threading.Lock()
 
 
+# Boss 12/10 : cache des embeddings de requêtes (les clients répètent
+# souvent les mêmes mots) — évite un encode CPU coûteux par message.
+_query_cache: dict[str, list] = {}
+_QUERY_CACHE_MAX = 512
+
+
+def _encode(text: str) -> list:
+    """Encode avec cache + sans barre de progression (logs Railway propres)."""
+    key = text.strip().casefold()
+    cached = _query_cache.get(key)
+    if cached is not None:
+        return cached
+    model = _get_model()
+    emb = model.encode(text, show_progress_bar=False).tolist()
+    if len(_query_cache) >= _QUERY_CACHE_MAX:
+        _query_cache.pop(next(iter(_query_cache)))
+    _query_cache[key] = emb
+    return emb
+
+
 def _load_knowledge_base():
     """Charge tous les fichiers de la base de connaissances en mémoire."""
     global _kb_cache
@@ -57,7 +77,7 @@ def _load_knowledge_base():
                     if len(section["text"].strip()) < 20:
                         continue  # Ignorer les sections trop courtes
 
-                    embedding = model.encode(section["text"]).tolist()
+                    embedding = model.encode(section["text"], show_progress_bar=False).tolist()
                     entries.append({
                         "text": section["text"],
                         "embedding": embedding,
@@ -118,6 +138,14 @@ def _cosine_similarity(a: list, b: list) -> float:
     return float(dot / (norm_a * norm_b))
 
 
+def search_async(query: str, lang: str) -> list[dict]:
+    """Version de search() qui sexécute dans un thread dédié :
+    lencodage CPU ne fige JAMAIS la boucle événementielle du bot."""
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+        return ex.submit(search, query, lang).result()
+
+
 def search(query: str, lang: str, top_k: int = RAG_TOP_K, min_score: float = RAG_MIN_SCORE) -> list[dict]:
     """
     Recherche les sections les plus pertinentes pour une requête.
@@ -129,7 +157,7 @@ def search(query: str, lang: str, top_k: int = RAG_TOP_K, min_score: float = RAG
         _load_knowledge_base()
 
     model = _get_model()
-    query_embedding = model.encode(query).tolist()
+    query_embedding = _encode(query)
 
     # Chercher UNIQUEMENT dans la langue du client
     entries = _kb_cache.get(lang, [])

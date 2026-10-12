@@ -153,20 +153,33 @@ async def handle_text_message(update: Update, context: ContextTypes.DEFAULT_TYPE
         # Log message bot (asynchrone)
         log_conversation(chat_id, "bot", "bot", message, lang)
 
-    # Router le message
-    try:
-        # PTB est asynchrone : le routeur est synchrone, on planifie
-        # l'envoi avec create_task pour ne pas créer une coroutine
-        # jamais attendue (messages jamais envoyés).
-        route_message(
-            chat_id, text,
-            lambda cid, msg: asyncio.create_task(
-                context.bot.send_message(chat_id=cid, text=msg)
-            ),
-        )
-    except Exception as e:
-        logger.error(f"Erreur routage message: {e}", exc_info=True)
-        await update.message.reply_text(GENERIC_MESSAGES[lang]["no_understand"])
+    # Router le message dans un THREAD dédié : le RAG (encode CPU)
+    # ne fige plus la boucle événementielle Telegram. L'envoi reste
+    # planifié via create_task (routeur synchrone + PTB asynchrone).
+    loop = asyncio.get_running_loop()
+
+    def _run_router():
+        try:
+            route_message(
+                chat_id, text,
+                lambda cid, msg: loop.call_soon_threadsafe(
+                    lambda m=msg: asyncio.create_task(
+                        context.bot.send_message(chat_id=cid, text=m)
+                    )
+                ),
+            )
+        except Exception as e:
+            logger.error(f"Erreur routage message: {e}", exc_info=True)
+            loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(
+                    context.bot.send_message(
+                        chat_id=chat_id,
+                        text=GENERIC_MESSAGES[lang]["no_understand"],
+                    )
+                )
+            )
+
+    threading.Thread(target=_run_router, daemon=True, name="aya-router").start()
 
 
 # === Handler de callbacks (boutons inline) ===
@@ -209,6 +222,14 @@ def main():
         sys.exit(1)
 
     logger.info("Démarrage du bot Komara...")
+
+    # Boss 12/10 : diagnostic démarrage — on SAIT tout de suite si
+    # Sheets est branché (fini les échecs silencieux mystères).
+    try:
+        import memory_sheets
+        logger.info("[DIAG] %s", memory_sheets.diagnose())
+    except Exception as e:
+        logger.warning("[DIAG] Sheets non vérifiable : %s", e)
 
     # Créer l'application
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
